@@ -14,10 +14,55 @@ namespace Livraria.Repository
         {
             return _livros;
         }
-        public void AdicionarLivro(Livro livro)
+
+        public Livro? ObterLivroPorId(Guid id)
         {
-            livro.Id = Guid.NewGuid();
-            _livros.Add(livro);
+            return _livros.FirstOrDefault(l => l.Id == id);
+        }
+
+        public Livro? ObterLivroPorTitulo(string titulo)
+        {
+            return _livros.FirstOrDefault(l => l.Titulo.Equals(titulo, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public List<Livro> ObterLivrosContendoTermo(string termo)
+        {
+            var resultado = _livros
+                .Where(l => l.Titulo.Contains(termo))
+                .ToList();
+            return resultado;
+        }
+
+        public void AdicionarLivro(LivroDTOCompleto livro)
+        {
+            
+            _livros.Add(new Livro
+            {
+                Titulo = livro.Titulo,
+                Id = Guid.NewGuid(),
+                Autor = livro.Autor,
+                Genero = livro.Genero,
+                Preco = livro.Preco,
+                Estoque = livro.Estoque
+            });
+        }
+
+        public void AtualizarLivro(LivroInfoDTO livroAtualizado, Livro livroExistente)
+        {
+                livroExistente.Titulo = livroAtualizado.Titulo;
+                livroExistente.Autor = livroAtualizado.Autor;
+                livroExistente.Genero = livroAtualizado.Genero;
+                livroExistente.Preco = livroAtualizado.Preco;
+                livroExistente.Estoque = livroAtualizado.Estoque;    
+        }
+
+        public void RemoverLivro(Guid id)
+        {
+            var livroExistente = _livros.FirstOrDefault(l => l.Id == id);
+            if (livroExistente != null)
+            {
+                _livros.Remove(livroExistente);
+            }
         }
     }
 }

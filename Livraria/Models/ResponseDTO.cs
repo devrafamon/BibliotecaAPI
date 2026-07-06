@@ -1,6 +1,6 @@
-﻿namespace Livraria.DTOs
+﻿namespace Livraria.Models
 {
-    public class ResponseDTO
+    public record ResponseDTO
     {
         public bool Success { get; set; }
         public string Message { get; set; } = string.Empty;

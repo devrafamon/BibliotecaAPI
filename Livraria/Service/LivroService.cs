@@ -1,5 +1,4 @@
 ﻿using Livraria.Models;
-using Livraria.DTOs;
 using Livraria.Repository;
 namespace Livraria.Service
 {
@@ -33,15 +32,11 @@ namespace Livraria.Service
         public ResponseDTO ValidarLivro(LivroDTOCompleto livro)
         {
             bool generoValido = ValidarGenero(livro.Genero);
-            bool duplicata = ChecarDuplicata(new LivroDTO { Titulo = livro.Titulo, Autor = livro.Autor, Id = livro.Id });
-            ResponseDTO response = new ResponseDTO();
-            LivroDTO livroSimples = new LivroDTO
+            bool duplicata = ChecarDuplicata(new LivroDTO(livro.Titulo, livro.Autor, livro.Id));
+            ResponseDTO response = new()
             {
-                Titulo = livro.Titulo,
-                Autor = livro.Autor,
-                Id = livro.Id
+                Success = generoValido && !duplicata
             };
-            response.Success = generoValido && !duplicata;
             if (!response.Success)
             {
                 response.Message = (generoValido) ? "Livro duplicado." : "Gênero inválido.";
